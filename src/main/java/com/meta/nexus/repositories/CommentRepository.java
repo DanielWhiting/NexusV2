@@ -5,11 +5,10 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.meta.nexus.models.Share;
+import com.meta.nexus.models.Comment;
 
 @Repository
-public interface ShareRepository extends CrudRepository<Share, Long>{
-	List<Share> findAll();
-	
+public interface CommentRepository extends CrudRepository<Comment, Long>{
+	List<Comment> findAll();
 
 }

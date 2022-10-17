@@ -70,20 +70,18 @@ public class Share {
     )
    private List<User> receivers;
 	
-	@OneToMany(mappedBy = "share")
-	Set<Comment> comments;
+	
+	    @ManyToMany(fetch = FetchType.LAZY)
+	    @JoinTable(
+	        name = "comments", 
+	        joinColumns = @JoinColumn(name = "share_id"), 
+	        inverseJoinColumns = @JoinColumn(name = "user_id")
+	    )     
+	    private List<User> users;
 	
 
 	
 	public Share(){}
-	
-	
-	public Set<Comment> getComments() {
-		return comments;
-	}
-	public void setComments(Set<Comment> comments) {
-		this.comments = comments;
-	}
 	public Long getId() {
 		return id;
 	}
@@ -132,6 +130,15 @@ public class Share {
 	public void setReceivers(List<User> receivers) {
 		this.receivers = receivers;
 	}
+	public List<User> getUsers() {
+		return users;
+	}
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+	
+	
+
 
 	
 }

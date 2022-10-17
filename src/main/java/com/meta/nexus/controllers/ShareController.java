@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import com.meta.nexus.models.Comment;
 import com.meta.nexus.models.Share;
+import com.meta.nexus.models.User;
+import com.meta.nexus.services.CommentService;
 import com.meta.nexus.services.ShareService;
 import com.meta.nexus.services.UserService;
 
@@ -26,42 +29,62 @@ private UserService userService;
 @Autowired
 private ShareService shareService;
 
+@Autowired
+private CommentService commentService;
+
 @GetMapping("/home")
-public String renderHome(HttpSession session, Model model,  Share share) {
+public String renderHome(HttpSession session, Model model,  Share share, Comment comment) {
 	if(session.getAttribute("userId")==null) {
 		return "redirect:/logout";
 	}
 	model.addAttribute("newShare", new Share());
 	Long userId = (Long) session.getAttribute("userId");
 	model.addAttribute("loggedInUser", userService.oneUser(userId));
+	model.addAttribute("newcom", new Comment());
 	
 	List<Share> allShares = shareService.allPosts();
 	model.addAttribute("thePosts", allShares);
+	
+	List<Comment> allComs = shareService.allComments();
+	model.addAttribute("theComments", allComs);
+	
+	Comment oneComment = shareService.oneCom(userId);
+	model.addAttribute("singleCom", oneComment);
+
 	
 	return "dashboard.jsp";
 	
 }
 
 @PostMapping("/share/post/process")
-public String newPost(@Valid @ModelAttribute("newShare") Share share,
+public String newPost(@Valid @ModelAttribute("newShare") Share share, Comment comment,
 		BindingResult result, Model model) {
 	
 	if(result.hasErrors()) {
-		return "create.jsp";
+		return "redirect:/home";
 	} else {
 		shareService.createPost(share);
 		return "redirect:/home";
 	}
 }
-//===============create post===================
 
-//@GetMapping("/shares/new")
-//public String renderNewShare(Model model) {
-//	model.addAttribute("newShare", new Share());
-//	return "create.jsp";
-//}
+//=================creating a comment=========================
+@PostMapping("/share/comment/process")
+public String newComment(@Valid @ModelAttribute("newcom") Comment comment,
+		BindingResult result, Model model) {
+	
+	if(result.hasErrors()) {
+		return "redirect:/home";
+	} else {
+		
+		commentService.createComment(comment);
+		return "redirect:/home";
+	}
+}
 
-//====================Many to Many==============================
+
+
+//====================Many to Many Add like==============================
 @PutMapping("/shares/{id}/receive")
 public String receiveVote(@PathVariable("id")Long id, HttpSession session) {
 	Long userId = (Long) session.getAttribute("userId");
@@ -69,4 +92,21 @@ public String receiveVote(@PathVariable("id")Long id, HttpSession session) {
 	return "redirect:/home";
 }
 
+@PutMapping("/shares/{id}/commentcount")
+public String receiveComCount(@PathVariable("id")Long id, HttpSession session) {
+	Long userId = (Long) session.getAttribute("userId");
+	shareService.receiveCommentCount(id, userId);
+	return "redirect:/home";
 }
+
+//====================Many to Many Remove like ==============================
+@PutMapping("/shares/{id}/unlike")
+public String unlikeVote(@PathVariable("id")Long id, HttpSession session) {
+	Long userId = (Long) session.getAttribute("userId");
+	shareService.unlike(id, userId);
+	return "redirect:/home";
+}
+
+	}
+
+

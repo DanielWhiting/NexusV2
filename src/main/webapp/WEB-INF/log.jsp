@@ -16,7 +16,7 @@
 </head>
 <body>
 <div>
-<h1>Joy Bundler Names</h1>
+<h1>Login or Sign up</h1>
 
 </div>
 <form:form action="/register" method="POST" modelAttribute="newUser">

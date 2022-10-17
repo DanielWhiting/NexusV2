@@ -54,82 +54,99 @@ public class User {
     )
     private List<Share> received_shares;
     
-   @OneToMany(mappedBy = "user")
-	Set<Comment> comments;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "comments", 
+        joinColumns = @JoinColumn(name = "user_id"), 
+        inverseJoinColumns = @JoinColumn(name = "share_id")
+    )
+    private List<Share> categories;
     
   
     public User() {}
-    
-    
-
-	public Set<Comment> getComments() {
-		return comments;
-	}
-
-
-
-	public void setComments(Set<Comment> comments) {
-		this.comments = comments;
-	}
-
 
 
 	public Long getId() {
 		return id;
 	}
 
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 
 	public String getUserName() {
 		return userName;
 	}
 
+
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+
 
 	public String getEmail() {
 		return email;
 	}
 
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 
 	public String getPassword() {
 		return password;
 	}
 
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 
 	public String getConfirm() {
 		return confirm;
 	}
 
+
 	public void setConfirm(String confirm) {
 		this.confirm = confirm;
 	}
+
 
 	public List<Share> getShares() {
 		return shares;
 	}
 
+
 	public void setShares(List<Share> shares) {
 		this.shares = shares;
 	}
+
 
 	public List<Share> getReceived_shares() {
 		return received_shares;
 	}
 
+
 	public void setReceived_shares(List<Share> received_shares) {
 		this.received_shares = received_shares;
 	}
 
+
+	public List<Share> getCategories() {
+		return categories;
+	}
+
+
+	public void setCategories(List<Share> categories) {
+		this.categories = categories;
+	}
+    
+    
 
 
 

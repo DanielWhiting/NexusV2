@@ -6,8 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.meta.nexus.models.Comment;
 import com.meta.nexus.models.Share;
 import com.meta.nexus.models.User;
+import com.meta.nexus.repositories.CommentRepository;
 import com.meta.nexus.repositories.ShareRepository;
 import com.meta.nexus.repositories.UserRepository;
 
@@ -21,6 +23,10 @@ public class ShareService {
 	
 	@Autowired
 	private UserService userService;
+	
+	
+	@Autowired
+	private CommentRepository commentRepo;
 	
 //		==========all posts============
 	public List<Share> allPosts(){
@@ -52,13 +58,64 @@ public class ShareService {
 		}
 	}
 	
-//	==============get like and comment =================
+//	==============get like=================
 	public void receiveVote(Long shareId, Long userId) {
 		Share share = this.oneShare(shareId);	
 		User user = userService.oneUser(userId);
+	
 		share.getReceivers().add(user);
 		share.setVote(share.getVote()+1);
+		
+	
+		
 		shareRepo.save(share);
 		}
+	
+//	==============get comment count=================
+	public void receiveCommentCount(Long shareId, Long userId) {
+		Share share = this.oneShare(shareId);	
+		User user = userService.oneUser(userId);
+	
+		share.getReceivers().add(user);
+		share.setCommentCount(share.getCommentCount()+1);
+	
+		
+		shareRepo.save(share);
+		}
+	
+//	==============unlike==============
+	public void unlike(Long shareId, Long userId) {
+		Share share = this.oneShare(shareId);	
+		User user = userService.oneUser(userId);
+		share.getReceivers().remove(user);
+		share.setVote(share.getVote()-1);
+		shareRepo.save(share);
+	}
+	
+
+	
+//	==========create comment============
+	
+	public Comment createComment(Long shareId, Comment comment) {	
+		
+		return commentRepo.save(comment);
+	}
+	
+//	==========comments posts============
+public List<Comment> allComments(){
+	return commentRepo.findAll();
+}
+
+//===========get one share================================
+
+public Comment oneCom(Long Id) {
+	Optional<Comment> singleComment = commentRepo.findById(Id);
+	if(singleComment.isPresent()) {
+		return singleComment.get();
+	} else {
+		return null;
+	}
+}
+
 
 }
