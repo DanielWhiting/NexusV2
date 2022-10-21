@@ -10,5 +10,7 @@ import com.meta.nexus.models.Comment;
 @Repository
 public interface CommentRepository extends CrudRepository<Comment, Long>{
 	List<Comment> findAll();
+	
+	List<Comment> findAllByOrderByCreatedAtDesc();
 
 }

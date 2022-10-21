@@ -11,5 +11,7 @@ import com.meta.nexus.models.Share;
 public interface ShareRepository extends CrudRepository<Share, Long>{
 	List<Share> findAll();
 	
+	List<Share> findAllByOrderByCreatedAtDesc();
+	
 
 }

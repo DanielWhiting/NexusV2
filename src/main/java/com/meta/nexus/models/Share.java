@@ -40,6 +40,8 @@ public class Share {
 	
 	private Integer commentCount;
 	
+	private String image;
+	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="share_id")
@@ -78,10 +80,27 @@ public class Share {
 	        inverseJoinColumns = @JoinColumn(name = "user_id")
 	    )     
 	    private List<User> users;
+	    
+//	    @ManyToMany(fetch = FetchType.LAZY)
+//	    @JoinTable(
+//	        name = "reply", 
+//	        joinColumns = @JoinColumn(name = "share_id"), 
+//	        inverseJoinColumns = @JoinColumn(name = "user_id")
+//	    )     
+//	    private List<User> replies;
 	
 
 	
 	public Share(){}
+	
+	
+	
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
 	public Long getId() {
 		return id;
 	}
